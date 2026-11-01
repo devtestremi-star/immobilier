@@ -11,7 +11,8 @@ pnpm install          # génère aussi le client Prisma et copie le worker MapLi
 pnpm dev
 ```
 
-Le fichier `.env` doit contenir les variables Neon (voir `.env.example`).
+Le fichier `.env` doit contenir les variables Neon et `ENV_PW`, le mot de passe d'accès au site (voir `.env.example`).
+Sans `ENV_PW`, le site reste bloqué.
 
 ## Base de données
 
