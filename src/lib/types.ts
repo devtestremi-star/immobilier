@@ -15,11 +15,20 @@ export type Listing = {
   elevator: boolean | null;
   dpe: string | null;
   seller: string;
-  publishedAt: string; // YYYY-MM-DD
+  publishedAt: string | null; // YYYY-MM-DD, absente chez Bien'ici
+  addedAt: string; // date d'import
   title: string;
   lat: number | null;
   lng: number | null;
+  isNew: boolean; // ajoutée lors du dernier import
+  source: string | null; // leboncoin | Bien'ici | Bien'ici + leboncoin
+  zone: string | null; // Zone principale | Bande +100 km
+  zoneDist: number | null;
+  others: string[]; // autres annonces du même logement
 };
+
+// date de publication, à défaut date d'import
+export const dateOf = (l: Listing) => l.publishedAt ?? l.addedAt;
 
 export type Review = {
   id: number;

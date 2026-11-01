@@ -29,14 +29,21 @@ model Listing {
   elevator    Boolean?
   dpe         String?
   seller      String
-  publishedAt DateTime
+  publishedAt DateTime? // absente chez Bien'ici
   title       String
   lat         Float?
   lng         Float?
+  isNew       Boolean  @default(false) // ajoutée lors du dernier import
+  source      String? // leboncoin | Bien'ici | Bien'ici + leboncoin
+  zone        String? // Zone principale | Bande +100 km
+  zoneDist    Int? // km au-delà de la zone principale
+  others      String[] @default([]) // autres annonces identiques (liens)
+  duplicateOf Int? // id de l'annonce principale si celle-ci est un doublon (masquée)
   createdAt   DateTime @default(now())
   reviews     Review[]
 
   @@index([department])
+  @@index([duplicateOf])
   @@index([price])
 }
 

@@ -18,7 +18,8 @@ Sans `ENV_PW`, le site reste bloqué.
 
 ```bash
 pnpm db:migrate       # applique / crée les migrations (connexion directe DATABASE_URL_UNPOOLED)
-pnpm db:seed          # importe tous les CSV du dossier CSV/ (n'ajoute que les nouvelles annonces, garde les notes)
+pnpm db:check [f.csv] # vérifie un CSV sans rien écrire : nouvelles annonces / déjà présentes / prix modifiés
+pnpm db:seed [f.csv]  # ajoute les nouvelles annonces (sans fichier : tout le dossier CSV/), garde les notes
 pnpm db:studio        # explorer les données
 ```
 

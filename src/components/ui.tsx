@@ -30,6 +30,11 @@ export function DpeBadge({ dpe }: { dpe: string | null }) {
   );
 }
 
+// annonce ajoutée lors du dernier import
+export function NewBadge() {
+  return <span className="rounded-md bg-amber-400 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-amber-950">New</span>;
+}
+
 export function Heart({ on, className = "h-5 w-5" }: { on: boolean; className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill={on ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2}>

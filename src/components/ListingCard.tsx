@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { aggOf, useData } from "./DataProvider";
-import { DpeBadge, ExternalIcon, Heart, ScoreBadge } from "./ui";
+import { DpeBadge, ExternalIcon, Heart, NewBadge, ScoreBadge } from "./ui";
 import { floorLabel, perM2, priceLabel } from "@/lib/format";
-import type { Listing } from "@/lib/types";
+import { dateOf, type Listing } from "@/lib/types";
 
 export function ListingFacts({ l }: { l: Listing }) {
   return (
@@ -58,7 +58,7 @@ export function ListingCard({ l, search = "" }: { l: Listing; search?: string })
             {a.avg !== null ? (
               <ScoreBadge score={a.avg} title={`${a.scored.length} note(s)`} />
             ) : (
-              <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600">Nouveau</span>
+              <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600">À noter</span>
             )}
           </div>
         </div>
@@ -66,13 +66,18 @@ export function ListingCard({ l, search = "" }: { l: Listing; search?: string })
         <div className="mt-1.5">
           <ListingFacts l={l} />
         </div>
-        <p className="mt-1 truncate text-sm text-slate-500">{l.title}</p>
+        {l.title && <p className="mt-1 truncate text-sm text-slate-500">{l.title}</p>}
 
         <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          {l.isNew && <NewBadge />}
           <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${l.transaction === "Achat" ? "bg-emerald-50 text-emerald-700" : "bg-sky-50 text-sky-700"}`}>
             {l.transaction}
           </span>
-          <span className="text-xs text-slate-400">{l.department} · {new Date(l.publishedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span>
+          <span className="text-xs text-slate-400">
+            {l.department}
+            {l.zone === "Bande +100 km" && " (+100 km)"} · {new Date(dateOf(l)).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+            {l.source && l.source !== "leboncoin" && ` · ${l.source}`}
+          </span>
           {a.scored.length > 0 && (
             <span className="text-xs text-slate-500">
               {a.scored.length} avis{mine?.score != null ? ` · toi : ${mine.score}` : ""}

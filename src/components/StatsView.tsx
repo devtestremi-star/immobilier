@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useData } from "./DataProvider";
-import { Heart, ScoreBadge } from "./ui";
+import { Heart, NewBadge, ScoreBadge } from "./ui";
 import { ago, fmtAvg, priceLabel } from "@/lib/format";
 import type { Listing } from "@/lib/types";
 
@@ -120,6 +120,8 @@ export function StatsView() {
       debate,
       favs,
       recent,
+      newTotal: ls.filter((l) => l.isNew).length,
+      newSeen: ls.filter((l) => l.isNew && seenIds.has(l.id)).length,
     };
   }, [listings, reviews, aggs, me, authors, tr]);
 
@@ -154,6 +156,20 @@ export function StatsView() {
           ))}
         </div>
       </div>
+
+      {s.newTotal > 0 && (
+        <Link
+          href={q("new=1")}
+          className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 transition-shadow hover:shadow-md"
+        >
+          <NewBadge />
+          <span className="min-w-0 flex-1 text-sm text-amber-950">
+            <b>{s.newTotal.toLocaleString("fr-FR")}</b> nouvelle{s.newTotal > 1 ? "s" : ""} annonce{s.newTotal > 1 ? "s" : ""} au dernier import
+            <span className="text-amber-800/70"> · {s.newSeen.toLocaleString("fr-FR")} déjà notée{s.newSeen > 1 ? "s" : ""}</span>
+          </span>
+          <span className="shrink-0 text-sm font-medium text-amber-900">Voir →</span>
+        </Link>
+      )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Tile label="Offres" value={s.total.toLocaleString("fr-FR")} href={q("")} />

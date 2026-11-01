@@ -1,7 +1,10 @@
-import type { Agg, Listing } from "./types";
+import { dateOf, type Agg, type Listing } from "./types";
 
 export type Filters = {
   q: string;
+  nw: boolean; // seulement le dernier import
+  zn: string; // "" | main | band
+  src: string; // "" | lbc | bienici
   tr: string[];
   type: string[];
   pmin: number | null;
@@ -28,6 +31,9 @@ export type Filters = {
 
 export const EMPTY: Filters = {
   q: "",
+  nw: false,
+  zn: "",
+  src: "",
   tr: [],
   type: [],
   pmin: null,
@@ -54,7 +60,7 @@ export const EMPTY: Filters = {
 
 const ARR = ["tr", "type", "dep", "acc", "dpe", "sel"] as const;
 const NUM = ["pmin", "pmax", "smin", "smax", "m2max", "fmin", "fmax", "days", "nmin", "nmax"] as const;
-const STR = ["q", "elev", "seen", "fav", "by", "sort"] as const;
+const STR = ["q", "zn", "src", "elev", "seen", "fav", "by", "sort"] as const;
 
 export function parseFilters(sp: URLSearchParams): Filters {
   const f: Filters = { ...EMPTY };
@@ -65,6 +71,7 @@ export function parseFilters(sp: URLSearchParams): Filters {
   }
   for (const k of STR) f[k] = sp.get(k) ?? EMPTY[k];
   f.funk = sp.get("funk") === "1";
+  f.nw = sp.get("new") === "1";
   return f;
 }
 
@@ -74,6 +81,7 @@ export function toSearch(f: Filters): string {
   for (const k of NUM) if (f[k] !== null) sp.set(k, String(f[k]));
   for (const k of STR) if (f[k] && f[k] !== EMPTY[k]) sp.set(k, f[k]);
   if (f.funk) sp.set("funk", "1");
+  if (f.nw) sp.set("new", "1");
   const s = sp.toString();
   return s ? `?${s}` : "";
 }
@@ -85,6 +93,11 @@ export const norm = (s: string) =>
     .toLowerCase();
 
 export function matches(l: Listing, a: Agg, f: Filters, me: string): boolean {
+  if (f.nw && !l.isNew) return false;
+  if (f.zn === "main" && l.zone === "Bande +100 km") return false;
+  if (f.zn === "band" && l.zone !== "Bande +100 km") return false;
+  if (f.src === "lbc" && l.source !== null && !l.source.includes("leboncoin")) return false;
+  if (f.src === "bienici" && !l.source?.includes("Bien'ici")) return false;
   if (f.tr.length && !f.tr.includes(l.transaction)) return false;
   if (f.type.length && !f.type.includes(l.type)) return false;
   if (f.pmin !== null && l.price < f.pmin) return false;
@@ -108,7 +121,7 @@ export function matches(l: Listing, a: Agg, f: Filters, me: string): boolean {
   if (f.sel.length && !f.sel.includes(l.seller)) return false;
   if (f.days !== null) {
     const limit = Date.now() - f.days * 86400000;
-    if (new Date(l.publishedAt).getTime() < limit) return false;
+    if (new Date(dateOf(l)).getTime() < limit) return false;
   }
   const mine = a.reviews.find((r) => r.author === me);
   const seenByMe = mine?.score != null;
@@ -160,7 +173,7 @@ export function sortListings(list: Listing[], aggs: Map<number, Agg>, sort: stri
     case "reviewed":
       return s.sort((a, b) => (aggs.get(b.id)?.lastAt ?? "").localeCompare(aggs.get(a.id)?.lastAt ?? ""));
     default:
-      return s.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.id - a.id);
+      return s.sort((a, b) => dateOf(b).localeCompare(dateOf(a)) || b.id - a.id);
   }
 }
 
@@ -178,6 +191,9 @@ const floorName = (n: number) => (n === 0 ? "RDC" : `${n}e`);
 // pastilles des filtres actifs, avec la façon de les retirer
 export function activeChips(f: Filters): { label: string; clear: Partial<Filters> }[] {
   const c: { label: string; clear: Partial<Filters> }[] = [];
+  if (f.nw) c.push({ label: "Nouvelles", clear: { nw: false } });
+  if (f.zn) c.push({ label: f.zn === "main" ? "Zone principale" : "Bande +100 km", clear: { zn: "" } });
+  if (f.src) c.push({ label: f.src === "lbc" ? "leboncoin" : "Bien'ici", clear: { src: "" } });
   if (f.q) c.push({ label: `« ${f.q} »`, clear: { q: "" } });
   if (f.tr.length) c.push({ label: f.tr.join(" / "), clear: { tr: [] } });
   if (f.type.length) c.push({ label: f.type.join(" / "), clear: { type: [] } });

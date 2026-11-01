@@ -118,6 +118,7 @@ export function FilterPanel({ f, update }: Props) {
 
   const accesses = useMemo(() => [...new Set(listings.map((l) => l.access))].sort(), [listings]);
   const loc = f.tr.length === 1 && f.tr[0] === "Location";
+  const newCount = useMemo(() => listings.filter((l) => l.isNew).length, [listings]);
 
   return (
     <div>
@@ -140,8 +141,38 @@ export function FilterPanel({ f, update }: Props) {
               {label}
             </Chip>
           ))}
+          {newCount > 0 && (
+            <Chip active={f.nw} onClick={() => update({ nw: !f.nw })}>
+              Nouvelles <span className="opacity-60">{newCount}</span>
+            </Chip>
+          )}
         </div>
       </Section>
+
+      {listings.some((l) => l.zone || l.source) && (
+        <Section title="Zone & source">
+          <Segmented
+            value={f.zn}
+            options={[
+              { value: "", label: "Toutes zones" },
+              { value: "main", label: "Principale" },
+              { value: "band", label: "+100 km" },
+            ]}
+            onChange={(zn) => update({ zn })}
+          />
+          <div className="mt-2">
+            <Segmented
+              value={f.src}
+              options={[
+                { value: "", label: "Tous sites" },
+                { value: "lbc", label: "leboncoin" },
+                { value: "bienici", label: "Bien'ici" },
+              ]}
+              onChange={(src) => update({ src })}
+            />
+          </div>
+        </Section>
+      )}
 
       <Section title={loc ? "Loyer mensuel" : "Prix"}>
         <Range min={f.pmin} max={f.pmax} suffix="€" onChange={(pmin, pmax) => update({ pmin, pmax })} />

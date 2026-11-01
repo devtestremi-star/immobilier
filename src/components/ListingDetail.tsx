@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { aggOf, useData } from "./DataProvider";
 import { OthersReviews, RatingForm } from "./RatingForm";
-import { DpeBadge, ExternalIcon, Heart, ScoreBadge } from "./ui";
+import { DpeBadge, ExternalIcon, Heart, NewBadge, ScoreBadge } from "./ui";
 import { useFiltered, useFilters } from "./useFilters";
 import { floorLabel, perM2, priceLabel } from "@/lib/format";
 
@@ -19,6 +19,8 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
     </div>
   );
 }
+
+const siteName = (url: string) => (url.includes("bienici") ? "Bien'ici" : url.includes("leboncoin") ? "leboncoin" : new URL(url).hostname);
 
 export function ListingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -75,16 +77,19 @@ export function ListingDetail() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="mb-1 flex items-center gap-2">
+                  {l.isNew && <NewBadge />}
                   <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${l.transaction === "Achat" ? "bg-emerald-50 text-emerald-700" : "bg-sky-50 text-sky-700"}`}>
                     {l.transaction}
                   </span>
-                  <span className="text-xs text-slate-400">Publiée le {new Date(l.publishedAt).toLocaleDateString("fr-FR")}</span>
+                  <span className="text-xs text-slate-400">
+                    {l.publishedAt ? `Publiée le ${new Date(l.publishedAt).toLocaleDateString("fr-FR")}` : `Ajoutée le ${new Date(l.addedAt).toLocaleDateString("fr-FR")}`}
+                  </span>
                 </div>
                 <h1 className="text-2xl font-bold tabular-nums sm:text-3xl">{priceLabel(l.price, l.transaction)}</h1>
                 <p className="mt-0.5 text-lg font-medium text-slate-700">
-                  {l.city} <span className="font-normal text-slate-400">· {l.postalCode} · {l.department}</span>
+                  {l.city} <span className="font-normal text-slate-400">· {l.postalCode} · {l.department}{l.zone === "Bande +100 km" ? " (+100 km)" : ""}</span>
                 </p>
-                <p className="mt-1 text-slate-500">{l.title}</p>
+                {l.title && <p className="mt-1 text-slate-500">{l.title}</p>}
               </div>
               {a.avg !== null && (
                 <div className="flex shrink-0 flex-col items-center gap-1">
@@ -98,8 +103,22 @@ export function ListingDetail() {
               onClick={() => openListing(l)}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 font-semibold text-white hover:bg-slate-700"
             >
-              Voir l&apos;annonce sur leboncoin <ExternalIcon />
+              Voir l&apos;annonce sur {siteName(l.url)} <ExternalIcon />
             </button>
+            {l.others.length > 0 && (
+              <div className="mt-2 text-sm text-slate-500">
+                Même logement publié ailleurs :{" "}
+                {l.others.map((u, i) => (
+                  <span key={u}>
+                    {i > 0 && ", "}
+                    <a href={u} target="_blank" rel="noopener" className="text-indigo-600 hover:underline">
+                      {siteName(u)}
+                      {l.others.length > 1 && ` ${i + 1}`}
+                    </a>
+                  </span>
+                ))}
+              </div>
+            )}
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
               <Fact label="Type">{l.type === "Appart" ? "Appartement" : "Maison"}</Fact>

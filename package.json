@@ -11,7 +11,8 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:check": "tsx prisma/seed.ts --check"
   },
   "dependencies": {
     "@prisma/adapter-neon": "^7.10.1",
