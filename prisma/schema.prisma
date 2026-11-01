@@ -11,3 +11,46 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Listing {
+  id          Int      @id @default(autoincrement())
+  url         String   @unique
+  transaction String // Achat | Location
+  access      String // Statut accès
+  type        String // Appart | Maison
+  price       Int
+  city        String
+  postalCode  String
+  department  String
+  surface     Float
+  floorRaw    String?
+  floor       Int? // 0 = RDC
+  floorsTotal Int?
+  elevator    Boolean?
+  dpe         String?
+  seller      String
+  publishedAt DateTime
+  title       String
+  lat         Float?
+  lng         Float?
+  createdAt   DateTime @default(now())
+  reviews     Review[]
+
+  @@index([department])
+  @@index([price])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  author    String
+  score     Int? // 1..10, null = coup de cœur sans note
+  comment   String?
+  favorite  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([listingId, author])
+  @@index([author])
+}

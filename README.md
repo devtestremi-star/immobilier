@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maison
 
-## Getting Started
+Suivi des annonces immobilières (achat / location) : filtres cumulables, carte, notes de 1 à 10, coups de cœur et commentaires partagés, tableau de bord.
 
-First, run the development server:
+Stack : Next.js 16, Prisma 7 + Neon (Postgres), MapLibre + tuiles OpenFreeMap, géocodage geo.api.gouv.fr. Hébergé sur Vercel.
+
+## Démarrer en local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install          # génère aussi le client Prisma et copie le worker MapLibre dans public/
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le fichier `.env` doit contenir les variables Neon (voir `.env.example`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Base de données
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm db:migrate       # applique / crée les migrations (connexion directe DATABASE_URL_UNPOOLED)
+pnpm db:seed          # importe tous les CSV du dossier CSV/ (n'ajoute que les nouvelles annonces, garde les notes)
+pnpm db:studio        # explorer les données
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Le géocodage par code postal + ville est mis en cache dans `prisma/geocode-cache.json`.
+La liste des annonces est mise en cache 1 h côté serveur : après un nouvel import, redéployer (ou attendre) pour la voir.
