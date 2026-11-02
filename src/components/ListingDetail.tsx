@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { aggOf, useData } from "./DataProvider";
 import { OthersReviews, RatingForm } from "./RatingForm";
-import { DpeBadge, ExternalIcon, Heart, NewBadge, ScoreBadge } from "./ui";
+import { DpeBadge, ElevatorIcon, ExternalIcon, Heart, NewBadge, ScoreBadge, StairsIcon } from "./ui";
 import { useFiltered, useFilters } from "./useFilters";
 import { floorLabel, perM2, priceLabel } from "@/lib/format";
 
@@ -124,8 +124,18 @@ export function ListingDetail() {
               <Fact label="Type">{l.type === "Appart" ? "Appartement" : "Maison"}</Fact>
               <Fact label="Surface">{l.surface.toLocaleString("fr-FR")} m²</Fact>
               {l.transaction === "Achat" && <Fact label="Prix au m²">{perM2(l.price, l.surface)}</Fact>}
-              <Fact label="Étage">{floorLabel(l.floor, l.floorsTotal, l.floorRaw)}</Fact>
-              <Fact label="Ascenseur">{l.elevator === null ? "?" : l.elevator ? "Oui" : "Non"}</Fact>
+              <Fact label="Étage">
+                <span className="inline-flex items-center gap-1.5">
+                  <StairsIcon className="h-4 w-4 text-slate-400" />
+                  {floorLabel(l.floor, l.floorsTotal, l.floorRaw)}
+                </span>
+              </Fact>
+              <Fact label="Ascenseur">
+                <span className={`inline-flex items-center gap-1.5 ${l.elevator ? "text-emerald-700" : l.elevator === false ? "text-slate-500" : ""}`}>
+                  <ElevatorIcon off={l.elevator === false} className={`h-4 w-4 ${l.elevator === null ? "text-slate-300" : ""}`} />
+                  {l.elevator === null ? "?" : l.elevator ? "Oui" : "Non"}
+                </span>
+              </Fact>
               <Fact label="Accès">{l.access}</Fact>
               <Fact label="DPE">{l.dpe ? <DpeBadge dpe={l.dpe} /> : "?"}</Fact>
               <Fact label="Vendeur">{l.seller}</Fact>

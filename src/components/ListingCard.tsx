@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { aggOf, useData } from "./DataProvider";
-import { DpeBadge, ExternalIcon, Heart, NewBadge, ScoreBadge } from "./ui";
+import { DpeBadge, ElevatorIcon, ExternalIcon, Heart, NewBadge, ScoreBadge, StairsIcon } from "./ui";
 import { floorLabel, perM2, priceLabel } from "@/lib/format";
 import { dateOf, type Listing } from "@/lib/types";
+
+// « 2e/4 », « RDC », sinon le libellé brut
+const shortFloor = (l: Listing) =>
+  l.floor === null ? floorLabel(null, null, l.floorRaw) : `${l.floor === 0 ? "RDC" : `${l.floor}e`}${l.floorsTotal ? `/${l.floorsTotal}` : ""}`;
 
 export function ListingFacts({ l }: { l: Listing }) {
   return (
@@ -15,14 +19,20 @@ export function ListingFacts({ l }: { l: Listing }) {
       {l.type === "Appart" || l.floor !== null ? (
         <>
           <span className="text-slate-300">·</span>
-          <span className={l.floor === null ? "text-slate-400" : ""}>{floorLabel(l.floor, l.floorsTotal, l.floorRaw)}</span>
+          <span className={`inline-flex items-center gap-1 ${l.floor === null ? "text-slate-400" : ""}`} title="Étage">
+            <StairsIcon className="h-4 w-4 text-slate-400" />
+            {shortFloor(l)}
+          </span>
         </>
       ) : null}
       {l.elevator !== null && (
-        <>
-          <span className="text-slate-300">·</span>
-          <span>{l.elevator ? "Ascenseur" : "Sans asc."}</span>
-        </>
+        <span
+          className={`inline-flex items-center ${l.elevator ? "text-emerald-600" : "text-slate-400"}`}
+          title={l.elevator ? "Ascenseur" : "Sans ascenseur"}
+          aria-label={l.elevator ? "Ascenseur" : "Sans ascenseur"}
+        >
+          <ElevatorIcon off={!l.elevator} />
+        </span>
       )}
       <DpeBadge dpe={l.dpe} />
     </div>

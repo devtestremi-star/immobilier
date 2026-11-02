@@ -43,6 +43,27 @@ export function Heart({ on, className = "h-5 w-5" }: { on: boolean; className?: 
   );
 }
 
+// escalier : étage
+export function StairsIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M3 20h5v-4h4v-4h4V8h5" />
+      <path d="M3 20V4" opacity={0.35} />
+    </svg>
+  );
+}
+
+// cabine d'ascenseur (barrée = sans ascenseur)
+export function ElevatorIcon({ off, className = "h-4 w-4" }: { off?: boolean; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="4" y="3" width="16" height="18" rx="2" />
+      <path d="M9.5 10l2.5-3 2.5 3M9.5 14l2.5 3 2.5-3" />
+      {off && <path d="M3 21L21 3" strokeWidth={2.2} />}
+    </svg>
+  );
+}
+
 export function ExternalIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
