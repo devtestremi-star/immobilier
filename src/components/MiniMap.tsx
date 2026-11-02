@@ -26,9 +26,9 @@ export default function MiniMap({ lat, lng }: { lat: number; lng: number }) {
         source: "c",
         paint: {
           "circle-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, 8, 14, 260],
-          "circle-color": "#4f46e5",
-          "circle-opacity": 0.15,
-          "circle-stroke-color": "#4f46e5",
+          "circle-color": "#818cf8",
+          "circle-opacity": 0.25,
+          "circle-stroke-color": "#818cf8",
           "circle-stroke-width": 2,
         },
       });

@@ -6,7 +6,7 @@ export const metadata = { title: "Connexion – Maison" };
 export default function LoginPage() {
   return (
     <main className="flex flex-1 items-center justify-center p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-sm">
         <div className="mb-5 flex items-center gap-2 text-lg font-bold tracking-tight">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round">

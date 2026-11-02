@@ -41,7 +41,7 @@ function drawPin(id: string) {
   c.lineTo(M + w / 2, M + H + TIP);
   c.lineTo(M + w / 2 + 5, M + H - 0.5);
   c.closePath();
-  c.fillStyle = "#fff";
+  c.fillStyle = "#0f172a";
   c.fill();
   c.lineWidth = fav === "1" ? 2 : 1.5;
   c.strokeStyle = border;
@@ -57,7 +57,7 @@ function drawPin(id: string) {
     x += 15;
   }
   c.font = font;
-  c.fillStyle = "#0f172a";
+  c.fillStyle = "#f8fafc";
   c.textBaseline = "middle";
   c.fillText(price, x, M + H / 2 + 0.5);
   x += pw + 5;
@@ -132,7 +132,7 @@ export default function MapView({ listings, search, fitKey }: { listings: Listin
         paint: {
           "circle-color": "#4f46e5",
           "circle-opacity": 0.85,
-          "circle-stroke-color": "#fff",
+          "circle-stroke-color": "#020617",
           "circle-stroke-width": 2,
           "circle-radius": ["step", ["get", "point_count"], 14, 10, 18, 50, 23, 200, 29],
         },
@@ -142,7 +142,7 @@ export default function MapView({ listings, search, fitKey }: { listings: Listin
         type: "symbol",
         source: "pts",
         filter: ["has", "point_count"],
-        layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12, "text-font": ["Noto Sans Bold"] },
+        layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12, "text-font": ["Noto Sans Bold"], "text-allow-overlap": true, "text-ignore-placement": true },
         paint: { "text-color": "#fff" },
       });
       m.addLayer({
@@ -154,7 +154,7 @@ export default function MapView({ listings, search, fitKey }: { listings: Listin
           // gris-bleu = jamais notée, sinon rouge → vert selon la note moyenne
           "circle-color": ["case", ["<", ["get", "avg"], 0], "#818cf8", ["interpolate", ["linear"], ["get", "avg"], 1, "#dc2626", 5, "#f59e0b", 7, "#84cc16", 10, "#16a34a"]],
           "circle-radius": 5,
-          "circle-stroke-color": ["case", ["==", ["get", "fav"], 1], "#f43f5e", "#ffffff"],
+          "circle-stroke-color": ["case", ["==", ["get", "fav"], 1], "#f43f5e", "#020617"],
           "circle-stroke-width": ["case", ["==", ["get", "fav"], 1], 2.5, 1.5],
         },
       });
@@ -234,20 +234,20 @@ export default function MapView({ listings, search, fitKey }: { listings: Listin
       <div className="absolute inset-0">
         <div ref={box} className="h-full w-full" />
       </div>
-      <div className="pointer-events-none absolute bottom-3 left-3 hidden gap-3 rounded-xl bg-white/90 px-3 py-2 text-xs text-slate-600 shadow sm:flex">
+      <div className="pointer-events-none absolute bottom-3 left-3 hidden gap-3 rounded-xl bg-slate-900/90 px-3 py-2 text-xs text-slate-300 shadow sm:flex">
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-indigo-400" />Jamais notée</span>
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-red-600" />Mauvaise note</span>
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-green-600" />Bonne note</span>
-        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border-[3px] border-rose-500 bg-white" />Coup de cœur</span>
-        <span className="text-slate-400">· pin = prix, note moyenne, ♥</span>
+        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border-[3px] border-rose-500 bg-slate-900" />Coup de cœur</span>
+        <span className="text-slate-500">· pin = prix, note moyenne, ♥</span>
       </div>
       {sel.length > 0 && (
-        <div className="absolute inset-x-2 bottom-2 z-10 max-h-[55%] overflow-y-auto rounded-2xl bg-slate-50/95 p-2 shadow-xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[420px]">
+        <div className="absolute inset-x-2 bottom-2 z-10 max-h-[55%] overflow-y-auto rounded-2xl bg-slate-950/95 p-2 shadow-xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[420px]">
           <div className="flex items-center justify-between px-1 pb-2 text-sm">
-            <span className="font-medium text-slate-600">
+            <span className="font-medium text-slate-300">
               {sel.length} logement{sel.length > 1 ? "s" : ""} · {sel[0].city}
             </span>
-            <button onClick={() => setSelected([])} className="rounded-full px-2 text-slate-500 hover:bg-slate-200" aria-label="Fermer">
+            <button onClick={() => setSelected([])} className="rounded-full px-2 text-slate-400 hover:bg-slate-700" aria-label="Fermer">
               ✕
             </button>
           </div>

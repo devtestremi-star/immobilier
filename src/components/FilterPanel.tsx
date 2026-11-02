@@ -11,9 +11,9 @@ const toggle = (arr: string[], v: string) => (arr.includes(v) ? arr.filter((x) =
 
 function Section({ title, children, right }: { title: string; children: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <section className="border-b border-slate-100 px-4 py-4 last:border-0">
+    <section className="border-b border-slate-800/70 px-4 py-4 last:border-0">
       <div className="mb-2.5 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</h3>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</h3>
         {right}
       </div>
       {children}
@@ -23,14 +23,14 @@ function Section({ title, children, right }: { title: string; children: React.Re
 
 function Segmented<T extends string>({ value, options, onChange }: { value: T; options: { value: T; label: React.ReactNode }[]; onChange: (v: T) => void }) {
   return (
-    <div className="flex rounded-xl bg-slate-100 p-1">
+    <div className="flex rounded-xl bg-slate-800 p-1">
       {options.map((o) => (
         <button
           key={o.value}
           type="button"
           onClick={() => onChange(o.value)}
           className={`flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors ${
-            value === o.value ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600"
+            value === o.value ? "bg-slate-900 text-indigo-300 shadow-sm" : "text-slate-300"
           }`}
         >
           {o.label}
@@ -72,9 +72,9 @@ function NumInput({ value, onChange, placeholder, suffix }: { value: number | nu
           const digits = text.replace(/[^\d]/g, "");
           setText(digits ? Number(digits).toLocaleString("fr-FR") : "");
         }}
-        className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-9 text-base tabular-nums outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 sm:text-sm"
+        className="w-full rounded-xl border border-slate-800 bg-slate-900 py-2 pl-3 pr-9 text-base tabular-nums outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 sm:text-sm"
       />
-      {suffix && <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">{suffix}</span>}
+      {suffix && <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">{suffix}</span>}
     </label>
   );
 }
@@ -83,7 +83,7 @@ function Range({ min, max, onChange, suffix, placeholders = ["Min", "Max"] }: { 
   return (
     <div className="flex items-center gap-2">
       <NumInput value={min} onChange={(v) => onChange(v, max)} placeholder={placeholders[0]} suffix={suffix} />
-      <span className="text-slate-300">–</span>
+      <span className="text-slate-600">–</span>
       <NumInput value={max} onChange={(v) => onChange(min, v)} placeholder={placeholders[1]} suffix={suffix} />
     </div>
   );
@@ -97,7 +97,7 @@ function Select({ value, onChange, children }: { value: string; onChange: (v: st
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-base outline-none focus:border-indigo-500 sm:text-sm"
+      className="flex-1 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-base outline-none focus:border-indigo-500 sm:text-sm"
     >
       {children}
     </select>
@@ -183,7 +183,7 @@ export function FilterPanel({ f, update }: Props) {
                 key={p}
                 type="button"
                 onClick={() => update({ pmax: f.pmax === p ? null : p })}
-                className={`rounded-lg px-2 py-1 text-xs ${f.pmax === p ? "bg-indigo-100 text-indigo-700" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
+                className={`rounded-lg px-2 py-1 text-xs ${f.pmax === p ? "bg-indigo-500/25 text-indigo-300" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
               >
                 ≤ {p / 1000}k
               </button>
@@ -194,7 +194,7 @@ export function FilterPanel({ f, update }: Props) {
 
       <Section title="Surface">
         <Range min={f.smin} max={f.smax} suffix="m²" onChange={(smin, smax) => update({ smin, smax })} />
-        <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
+        <div className="mt-2 flex items-center gap-2 text-sm text-slate-300">
           <span className="shrink-0">Prix au m² max</span>
           <NumInput value={f.m2max} onChange={(m2max) => update({ m2max })} placeholder="—" suffix="€" />
         </div>
@@ -204,7 +204,7 @@ export function FilterPanel({ f, update }: Props) {
         title="Département"
         right={
           f.dep.length > 0 && (
-            <button className="text-xs text-indigo-600" onClick={() => update({ dep: [] })}>
+            <button className="text-xs text-indigo-400" onClick={() => update({ dep: [] })}>
               Tous
             </button>
           )
@@ -213,7 +213,7 @@ export function FilterPanel({ f, update }: Props) {
         <div className="flex flex-wrap gap-1.5">
           {depCounts.map(([d, n]) => (
             <Chip key={d} active={f.dep.includes(d)} onClick={() => update({ dep: toggle(f.dep, d) })}>
-              {d} <span className={f.dep.includes(d) ? "text-indigo-200" : "text-slate-400"}>{n}</span>
+              {d} <span className={f.dep.includes(d) ? "text-indigo-200" : "text-slate-500"}>{n}</span>
             </Chip>
           ))}
         </div>
@@ -236,7 +236,7 @@ export function FilterPanel({ f, update }: Props) {
               </option>
             ))}
           </Select>
-          <span className="text-slate-300">–</span>
+          <span className="text-slate-600">–</span>
           <Select value={f.fmax?.toString() ?? ""} onChange={(v) => update({ fmax: v === "" ? null : Number(v) })}>
             <option value="">Max</option>
             {FLOORS.map((n) => (
@@ -246,7 +246,7 @@ export function FilterPanel({ f, update }: Props) {
             ))}
           </Select>
         </div>
-        <label className="mt-2.5 flex items-center gap-2 text-sm text-slate-600">
+        <label className="mt-2.5 flex items-center gap-2 text-sm text-slate-300">
           <input type="checkbox" checked={f.funk} onChange={(e) => update({ funk: e.target.checked })} className="h-4 w-4 accent-indigo-600" />
           Inclure les étages non renseignés
         </label>
@@ -278,7 +278,7 @@ export function FilterPanel({ f, update }: Props) {
             </Chip>
           ))}
         </div>
-        <div className="mt-3 flex items-center gap-2 text-sm text-slate-600">
+        <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
           <span className="w-24 shrink-0">Note moyenne</span>
           <Select value={f.nmin?.toString() ?? ""} onChange={(v) => update({ nmin: v ? Number(v) : null })}>
             <option value="">Min</option>
@@ -288,7 +288,7 @@ export function FilterPanel({ f, update }: Props) {
               </option>
             ))}
           </Select>
-          <span className="text-slate-300">–</span>
+          <span className="text-slate-600">–</span>
           <Select value={f.nmax?.toString() ?? ""} onChange={(v) => update({ nmax: v ? Number(v) : null })}>
             <option value="">Max</option>
             {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
@@ -311,7 +311,7 @@ export function FilterPanel({ f, update }: Props) {
         </div>
         {authors.length > 0 && (
           <div className="mt-3">
-            <div className="mb-1.5 text-sm text-slate-600">Notées par</div>
+            <div className="mb-1.5 text-sm text-slate-300">Notées par</div>
             <div className="flex flex-wrap gap-1.5">
               {authors.map((a) => (
                 <Chip key={a} active={f.by === a} onClick={() => update({ by: f.by === a ? "" : a })}>
@@ -343,7 +343,7 @@ export function FilterPanel({ f, update }: Props) {
               onClick={() => update({ dpe: toggle(f.dpe, d) })}
               className={`rounded-lg border-2 p-1 ${f.dpe.includes(d) ? "border-indigo-600" : "border-transparent"}`}
             >
-              {d === "?" ? <span className="inline-flex h-5 min-w-5 items-center justify-center rounded bg-slate-100 px-1 text-[11px] font-bold text-slate-500">?</span> : <DpeBadge dpe={d} />}
+              {d === "?" ? <span className="inline-flex h-5 min-w-5 items-center justify-center rounded bg-slate-800 px-1 text-[11px] font-bold text-slate-400">?</span> : <DpeBadge dpe={d} />}
             </button>
           ))}
         </div>
@@ -387,7 +387,7 @@ export function SearchBox({ value, onChange }: { value: string; onChange: (v: st
   }, [text]);
   return (
     <label className="relative flex-1">
-      <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" strokeWidth={2}>
+      <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" strokeWidth={2}>
         <circle cx="11" cy="11" r="7" />
         <path d="m20 20-3.5-3.5" strokeLinecap="round" />
       </svg>
@@ -396,7 +396,7 @@ export function SearchBox({ value, onChange }: { value: string; onChange: (v: st
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Ville, CP, mot-clé…"
-        className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 sm:text-sm"
+        className="w-full rounded-xl border border-slate-800 bg-slate-900 py-2.5 pl-9 pr-3 text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 sm:text-sm"
       />
     </label>
   );

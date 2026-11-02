@@ -38,7 +38,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const userBtn = (
     <button
       onClick={() => setNameOpen(true)}
-      className="flex items-center gap-2 rounded-full border border-slate-200 py-1 pl-1 pr-3 text-sm hover:bg-slate-50"
+      className="flex items-center gap-2 rounded-full border border-slate-800 py-1 pl-1 pr-3 text-sm hover:bg-slate-800"
       title="Changer de prénom"
     >
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold uppercase text-white">
@@ -50,7 +50,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-[1600px] items-center gap-6 px-4">
           <Link href={`/${q}`} className="flex items-center gap-2 text-lg font-bold tracking-tight">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
@@ -65,7 +65,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <Link
                 key={n.label}
                 href={n.href}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${n.active ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"}`}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${n.active ? "bg-indigo-500/15 text-indigo-300" : "text-slate-300 hover:bg-slate-800"}`}
               >
                 <Icon d={n.icon} />
                 {n.label}
@@ -78,12 +78,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
       <div className="flex flex-1 flex-col pb-16 sm:pb-0">{children}</div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] sm:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t border-slate-800 bg-slate-900 pb-[env(safe-area-inset-bottom)] sm:hidden">
         {nav.map((n) => (
           <Link
             key={n.label}
             href={n.href}
-            className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${n.active ? "text-indigo-600" : "text-slate-500"}`}
+            className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${n.active ? "text-indigo-400" : "text-slate-400"}`}
           >
             <Icon d={n.icon} />
             {n.label}

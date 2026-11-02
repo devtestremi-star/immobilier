@@ -23,7 +23,7 @@ export function DpeBadge({ dpe }: { dpe: string | null }) {
     <span
       title={c ? `DPE ${dpe}` : dpe === "N" ? "DPE non soumis" : dpe === "V" ? "DPE vierge" : `DPE ${dpe}`}
       className="inline-flex h-5 min-w-5 items-center justify-center rounded px-1 text-[11px] font-bold"
-      style={c ? { background: c, color: ["C", "D", "E"].includes(dpe) ? "#1f2937" : "#fff" } : { background: "#e5e7eb", color: "#4b5563" }}
+      style={c ? { background: c, color: ["C", "D", "E"].includes(dpe) ? "#1f2937" : "#fff" } : { background: "#334155", color: "#cbd5e1" }}
     >
       {dpe}
     </span>
@@ -102,22 +102,22 @@ export function Sheet({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px]" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" onClick={onClose} />
       <div
-        className={`relative flex w-full flex-col bg-white shadow-2xl sm:max-w-lg sm:rounded-2xl ${
+        className={`relative flex w-full flex-col bg-slate-900 shadow-2xl sm:max-w-lg sm:rounded-2xl ${
           full ? "h-[100dvh] sm:h-auto sm:max-h-[90dvh]" : "max-h-[92dvh] rounded-t-2xl"
         }`}
       >
-        <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-slate-800/70 px-4 py-3">
           <div className="min-w-0 flex-1 font-semibold">{title}</div>
-          <button onClick={onClose} className="-mr-2 rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Fermer">
+          <button onClick={onClose} className="-mr-2 rounded-full p-2 text-slate-400 hover:bg-slate-800" aria-label="Fermer">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
             </svg>
           </button>
         </div>
         <div className="flex-1 overflow-y-auto overscroll-contain">{children}</div>
-        {footer && <div className="border-t border-slate-100 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">{footer}</div>}
+        {footer && <div className="border-t border-slate-800/70 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">{footer}</div>}
       </div>
     </div>
   );
@@ -129,7 +129,7 @@ export function Chip({ active, onClick, children }: { active: boolean; onClick: 
       type="button"
       onClick={onClick}
       className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-        active ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+        active ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-600"
       }`}
     >
       {children}

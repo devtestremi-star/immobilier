@@ -15,7 +15,9 @@ export const floorLabel = (floor: number | null, total: number | null, raw: stri
 // rouge (1) → vert (10)
 export const scoreHue = (s: number) => Math.round(((Math.min(10, Math.max(1, s)) - 1) / 9) * 125);
 export const scoreBg = (s: number) => `hsl(${scoreHue(s)} 70% 42%)`;
-export const scoreSoft = (s: number) => `hsl(${scoreHue(s)} 75% 94%)`;
+// variantes pour fond sombre : pastille discrète + texte lisible
+export const scoreSoft = (s: number) => `hsl(${scoreHue(s)} 60% 15%)`;
+export const scoreText = (s: number) => `hsl(${scoreHue(s)} 75% 65%)`;
 
 export const fmtAvg = (n: number) => (Math.round(n * 10) / 10).toLocaleString("fr-FR");
 

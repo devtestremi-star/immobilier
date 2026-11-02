@@ -4,4 +4,4 @@ import * as maplibregl from "maplibre-gl";
 maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
 
 export { maplibregl };
-export const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+export const MAP_STYLE = "https://tiles.openfreemap.org/styles/dark";

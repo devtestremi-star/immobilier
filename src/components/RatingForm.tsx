@@ -4,7 +4,7 @@ import { useState } from "react";
 import { aggOf, useData } from "./DataProvider";
 import { NameForm } from "./NamePrompt";
 import { Heart, ScoreBadge } from "./ui";
-import { ago, scoreBg, scoreSoft } from "@/lib/format";
+import { ago, scoreBg, scoreSoft, scoreText } from "@/lib/format";
 
 const LABELS: Record<number, string> = {
   1: "À fuir",
@@ -52,7 +52,7 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
     <div className="space-y-4">
       <div>
         <div className="mb-2 flex items-baseline justify-between">
-          <span className="text-sm font-medium text-slate-700">Ta note</span>
+          <span className="text-sm font-medium text-slate-200">Ta note</span>
           <span className="text-sm font-semibold" style={score ? { color: scoreBg(score) } : undefined}>
             {score ? `${score}/10 · ${LABELS[score]}` : "Touche une note"}
           </span>
@@ -69,7 +69,7 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
                 style={
                   active
                     ? { background: scoreBg(n), borderColor: scoreBg(n), color: "#fff" }
-                    : { background: scoreSoft(n), borderColor: "transparent", color: scoreBg(n) }
+                    : { background: scoreSoft(n), borderColor: "transparent", color: scoreText(n) }
                 }
               >
                 {n}
@@ -83,7 +83,7 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
         type="button"
         onClick={() => setFavorite(!favorite)}
         className={`flex w-full items-center justify-center gap-2 rounded-xl border-2 py-2.5 font-medium transition-colors ${
-          favorite ? "border-rose-500 bg-rose-50 text-rose-600" : "border-slate-200 text-slate-600 hover:border-rose-200 hover:text-rose-500"
+          favorite ? "border-rose-500 bg-rose-500/15 text-rose-400" : "border-slate-800 text-slate-300 hover:border-rose-500/40 hover:text-rose-500"
         }`}
       >
         <Heart on={favorite} />
@@ -95,10 +95,10 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
         onChange={(e) => setComment(e.target.value)}
         rows={3}
         placeholder="Ton commentaire (points forts, défauts, quartier…)"
-        className="w-full resize-y rounded-xl border border-slate-300 px-3 py-2.5 text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+        className="w-full resize-y rounded-xl border border-slate-700 px-3 py-2.5 text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25"
       />
 
-      {err && <p className="text-sm text-red-600">{err}</p>}
+      {err && <p className="text-sm text-red-400">{err}</p>}
 
       <div className="flex gap-2">
         <button
@@ -120,13 +120,13 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
               setFavorite(false);
               submit({ score: null, comment: "", favorite: false });
             }}
-            className="rounded-xl border border-slate-200 px-4 text-sm text-slate-500 hover:bg-slate-50"
+            className="rounded-xl border border-slate-800 px-4 text-sm text-slate-400 hover:bg-slate-800"
           >
             Supprimer
           </button>
         )}
       </div>
-      <p className="text-center text-xs text-slate-400">Notée par {me}</p>
+      <p className="text-center text-xs text-slate-500">Notée par {me}</p>
     </div>
   );
 }
@@ -134,19 +134,19 @@ export function RatingForm({ listingId, onSaved }: { listingId: number; onSaved?
 export function OthersReviews({ listingId }: { listingId: number }) {
   const { me, aggs } = useData();
   const others = aggOf(aggs, listingId).reviews.filter((r) => r.author !== me);
-  if (!others.length) return <p className="text-sm text-slate-400">Personne d&apos;autre n&apos;a encore donné son avis.</p>;
+  if (!others.length) return <p className="text-sm text-slate-500">Personne d&apos;autre n&apos;a encore donné son avis.</p>;
   return (
     <ul className="space-y-3">
       {others.map((r) => (
         <li key={r.id} className="flex gap-3">
-          {r.score != null ? <ScoreBadge score={r.score} /> : <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-400">–</span>}
+          {r.score != null ? <ScoreBadge score={r.score} /> : <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-500">–</span>}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 text-sm">
               <span className="font-semibold">{r.author}</span>
               {r.favorite && <Heart on className="h-4 w-4 text-rose-500" />}
-              <span className="text-xs text-slate-400">{ago(r.updatedAt)}</span>
+              <span className="text-xs text-slate-500">{ago(r.updatedAt)}</span>
             </div>
-            {r.comment && <p className="mt-0.5 whitespace-pre-line text-sm text-slate-700">{r.comment}</p>}
+            {r.comment && <p className="mt-0.5 whitespace-pre-line text-sm text-slate-200">{r.comment}</p>}
           </div>
         </li>
       ))}

@@ -13,14 +13,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#4f46e5",
+  themeColor: "#020617",
+  colorScheme: "dark",
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col overflow-x-clip bg-slate-50 text-slate-900">{children}</body>
+      <body className="flex min-h-full flex-col overflow-x-clip bg-slate-950 text-slate-50">{children}</body>
     </html>
   );
 }

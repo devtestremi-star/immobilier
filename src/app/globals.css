@@ -5,6 +5,7 @@
 }
 
 html {
+  color-scheme: dark; /* champs, listes déroulantes et barres de défilement natifs en sombre */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -16,4 +17,33 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* contrôles MapLibre en sombre */
+.maplibregl-ctrl-group {
+  background: #0f172a !important;
+  box-shadow: 0 0 0 1px #1e293b !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top-color: #1e293b !important;
+}
+.maplibregl-ctrl-group button:not(:disabled):hover {
+  background-color: #1e293b !important;
+}
+.maplibregl-ctrl-icon {
+  filter: invert(1) brightness(0.9);
+}
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl-attrib.maplibregl-compact {
+  background: rgb(15 23 42 / 0.85) !important;
+  color: #94a3b8;
+}
+.maplibregl-ctrl-attrib *:not(a) {
+  color: #94a3b8 !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: #cbd5e1 !important;
+}
+.maplibregl-ctrl-attrib-button {
+  filter: invert(1);
 }

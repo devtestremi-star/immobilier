@@ -20,7 +20,7 @@ export function PendingSheet() {
       onClose={clearPending}
       title={
         <div className="min-w-0">
-          <div className="text-xs font-normal text-slate-500">Alors, cette annonce ?</div>
+          <div className="text-xs font-normal text-slate-400">Alors, cette annonce ?</div>
           <div className="truncate">
             {priceLabel(l.price, l.transaction)} · {l.city}
           </div>
@@ -30,13 +30,13 @@ export function PendingSheet() {
       <div className="space-y-5 p-4">
         <div className="space-y-1">
           <ListingFacts l={l} />
-          <Link href={`/offre/${l.id}`} onClick={clearPending} className="text-sm text-indigo-600 hover:underline">
+          <Link href={`/offre/${l.id}`} onClick={clearPending} className="text-sm text-indigo-400 hover:underline">
             Voir la fiche complète →
           </Link>
         </div>
         <RatingForm key={`${l.id}:${me}`} listingId={l.id} onSaved={() => setTimeout(clearPending, 700)} />
         <div>
-          <h3 className="mb-2 text-sm font-semibold text-slate-700">Avis des autres</h3>
+          <h3 className="mb-2 text-sm font-semibold text-slate-200">Avis des autres</h3>
           <OthersReviews listingId={l.id} />
         </div>
       </div>
