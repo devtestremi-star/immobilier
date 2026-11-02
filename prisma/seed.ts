@@ -67,6 +67,28 @@ async function geocode(rows: Row[]) {
   return (cp: string, city: string) => cache[`${cp}|${norm(city)}`] ?? cache[`cp:${cp}`] ?? null;
 }
 
+// Bien'ici sans ville ni code postal : la commune est dans le lien (…/annonce/vente/vichy/…)
+async function fillMissingCity(rows: Row[]) {
+  const todo = rows.filter((r) => !r["Code postal"] && r["Lien"].includes("bienici.com/annonce/"));
+  if (!todo.length) return;
+  let ok = 0;
+  for (const r of todo) {
+    const slug = r["Lien"].split("/")[5] ?? "";
+    const dep = r["Département"].match(/\((\w+)\)$/)?.[1];
+    const res = await fetch(
+      `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(slug.replace(/-/g, " "))}${dep ? `&codeDepartement=${dep}` : ""}&fields=nom,codesPostaux&boost=population&limit=1`,
+    );
+    const [c]: { nom: string; codesPostaux: string[] }[] = res.ok ? await res.json() : [];
+    if (c) {
+      r["Ville"] = c.nom;
+      r["Code postal"] = c.codesPostaux[0];
+      ok++;
+    }
+    await new Promise((res) => setTimeout(res, 40));
+  }
+  console.log(`Commune retrouvée depuis le lien : ${ok}/${todo.length}`);
+}
+
 // formats : CSV leboncoin d'origine (avec Titre) ou CSV « fusion » (Sources, Zone, doublons, sans Titre)
 const TYPES: Record<string, string> = { Appartement: "Appart" };
 const OTHERS = "Autres annonces identiques ou quasi identiques";
@@ -166,6 +188,7 @@ async function main() {
   }
 
   if (rows.length) {
+    await fillMissingCity(rows);
     const locate = await geocode(rows);
     const data = rows.map((r) => toListing(r, locate, !known.has(r["Lien"])));
     console.log(`Positionnées : ${data.filter((d) => d.lat !== null).length}/${data.length}`);
@@ -193,6 +216,22 @@ async function main() {
                   ${meta.map((r) => othersOf(r).join(" "))}::text[]) AS v(url, source, zone, dist, others)
       WHERE l.url = v.url`;
     console.log(`Infos source / zone / doublons mises à jour : ${n}`);
+  }
+
+  // annonces déjà en base restées sans position (ex. Bien'ici sans commune) : nouvel essai
+  const unplaced = await prisma.listing.findMany({ where: { lat: null, url: { in: all.map((r) => r["Lien"]) } }, select: { id: true, url: true } });
+  if (unplaced.length) {
+    const rs = unplaced.map((l) => byUrl.get(l.url)!);
+    await fillMissingCity(rs);
+    const locate = await geocode(rs);
+    let placed = 0;
+    for (const l of unplaced) {
+      const d = toListing(byUrl.get(l.url)!, locate, false);
+      if (d.lat === null) continue;
+      await prisma.listing.update({ where: { id: l.id }, data: { city: d.city, postalCode: d.postalCode, lat: d.lat, lng: d.lng } });
+      placed++;
+    }
+    console.log(`Annonces sans position repositionnées : ${placed}/${unplaced.length}`);
   }
 
   if (dupOf.size) {
